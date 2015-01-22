@@ -14,7 +14,7 @@
                       "Accept" "*/*",
                       "Connection" "close"})
 
-(def *connect-timeout* 0)
+(def  *connect-timeout* 0)
 
 (def *buffer-size* 1024)
 
@@ -164,3 +164,18 @@ by a server."
        :get-header #(.getHeaderField connection #^String (str %))
        :cookies (apply merge (map parse-cookies (headers :set-cookie)))
        :url (str (.getURL connection))})))
+
+(defn http-request [{:keys [method url headers cookies body] :as req} callback]
+  (println "****")
+  (println req)
+  (assert url "you didn't specify a url to request!")
+  (let [p (promise)] (deliver p (callback
+                                 (let [r (request url (if method (name method)
+                                                          "get") headers cookies body)]
+                                   (-> r
+                                       (assoc :body (apply str (:body-seq r)))
+                                       (assoc :status (:code r))
+                                       ))
+
+)))
+  )
