@@ -2,6 +2,10 @@
 
 Plain http-client to use java.net classes
 
+## Usage
+
+`[tangrammer/java-net-http-client "0.1.1"]`
+
 
 ## License
 
